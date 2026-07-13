@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Apps Script</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: 100vh;
+            border: none;
+            display: block;
+        }
+        .error-message {
+            display: none;
+            text-align: center;
+            padding: 50px 20px;
+            background: #ffebee;
+            color: #c62828;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+        .error-message h2 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <iframe 
+        id="appFrame"
+        src="https://script.google.com/macros/s/AKfycbzYQ7fpRwKpmZpF77OUOR-Nqah2PGK4feu4EpJXDBdu24hrkIplcUZVj99CYJTAYYxZ/exec"
+        allow="geolocation; microphone; camera; midi; encrypted-media"
+        allowfullscreen
+        loading="eager"
+        onerror="handleError()"
+    ></iframe>
+    
+    <div class="error-message" id="errorMessage">
+        <h2>⚠️ Gagal Memuat Halaman</h2>
+        <p>Periksa koneksi internet Anda atau coba lagi nanti.</p>
+        <p><small>URL: https://script.google.com/macros/s/AKfycbzYQ7fpRwKpmZpF77OUOR-Nqah2PGK4feu4EpJXDBdu24hrkIplcUZVj99CYJTAYYxZ/exec</small></p>
+    </div>
+
+    <script>
+        // Sembunyikan iframe jika terjadi error
+        function handleError() {
+            document.getElementById('appFrame').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+
+        // Fallback: cek apakah iframe berhasil dimuat dalam 8 detik
+        setTimeout(() => {
+            const frame = document.getElementById('appFrame');
+            try {
+                // Coba akses location iframe - jika gagal berarti cross-origin tapi tetap berfungsi
+                const frameLocation = frame.contentWindow.location.href;
+                // Jika masih about:blank, kemungkinan gagal dimuat
+                if (frameLocation === 'about:blank') {
+                    handleError();
+                }
+            } catch (e) {
+                // Cross-origin error berarti iframe berhasil dimuat (berbeda domain)
+                // Tidak perlu melakukan apa-apa
+                console.log('Iframe berhasil dimuat (cross-origin)');
+            }
+        }, 8000);
+    </script>
+</body>
+</html>
